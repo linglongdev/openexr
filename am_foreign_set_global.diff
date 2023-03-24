@@ -1,0 +1,36 @@
+Description: Set automake options globally in configure.ac
+ Always invoke automake with --foreign by specifying this option as argument
+ to AM_INIT_AUTOMAKE in configure.ac instead of in the bootstrap script.
+ This makes it possible to use autoreconf on distributed tarballs.
+Author: Andreas Metzler <ametzler@debian.org>
+Origin: vendor
+Forwarded: no
+Last-Update: 2018-11-11
+
+diff --git a/OpenEXR/bootstrap b/OpenEXR/bootstrap
+index bc36ea6..3cf518d 100755
+--- a/OpenEXR/bootstrap
++++ b/OpenEXR/bootstrap
+@@ -67,7 +67,7 @@ run_cmd aclocal -I m4 $ACLOCAL_INCLUDE
+ sed -e 's/shared_ext\$major \$libname\$shared_ext/shared_ext\$major \$libname\$release\$shared_ext \$libname\$shared_ext/' -i aclocal.m4
+ run_cmd $LIBTOOLIZE --automake --copy
+ sed -e 's/shared_ext\$major \$libname\$shared_ext/shared_ext\$major \$libname\$release\$shared_ext \$libname\$shared_ext/' -i m4/libtool.m4
+-run_cmd automake --add-missing --copy --foreign
++run_cmd automake --add-missing --copy
+ run_cmd autoconf
+ echo
+ echo "Now type './configure' to configure OpenEXR."
+diff --git a/OpenEXR/configure.ac b/OpenEXR/configure.ac
+index 2806945..3f5ee61 100644
+--- a/OpenEXR/configure.ac
++++ b/OpenEXR/configure.ac
+@@ -19,7 +19,7 @@ AC_CANONICAL_HOST
+ AC_CONFIG_SRCDIR(IlmImfTest/main.cpp)
+ AC_CONFIG_HEADERS([config/OpenEXRConfig.h])
+ AC_CONFIG_HEADERS([config/OpenEXRConfigInternal.h])
+-AM_INIT_AUTOMAKE(1.6.3)  dnl Require automake 1.6.3 or better
++AM_INIT_AUTOMAKE([1.6.3 foreign])  dnl Require automake 1.6.3 or better
+ AM_MAINTAINER_MODE
+ 
+ 
+
